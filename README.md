@@ -136,7 +136,9 @@ You can find the standard Markdown syntax documentation over at
     * Requires Pygments and some special CSS, see [here](http://pythonhosted.org/Markdown/extensions/code_hilite.html).
 * Definition lists
     * These are defined as follows:
-        ```Orange
+        ```
+
+        Orange
         :    The fruit of an evergreen tree of the genus Citrus
 
         Lemon
@@ -146,6 +148,7 @@ You can find the standard Markdown syntax documentation over at
         supports syntax highlighting (provided your template has CSS classes for
         it) and emphasized lines. [See here](http://pythonhosted.org/Markdown/extensions/fenced_code_blocks.html) for more info.
         ```
+
         A paragrah, introducing:
 
         ~~~~~~~~~~~~~
@@ -156,7 +159,7 @@ You can find the standard Markdown syntax documentation over at
         # This line is emphasized
         # This line isn't
         # This line is emphasized
-        ~~~~~~~~~~~~~
+        \~~~~~~~~~~~~~
         ```
     * This also support GitHub's backtick syntax (\`\`\`).
 * Footnotes
@@ -172,6 +175,7 @@ You can find the standard Markdown syntax documentation over at
         in the output. You can also add `markdown="1"` to block-level elements if
         you also want their content to be parsed as Markdown. For example:
         ```
+
         Input:
             <div markdown="1">
                 This is *true* markdown text.
@@ -196,9 +200,13 @@ You can find the standard Markdown syntax documentation over at
 * Tables
     * Yep, tables too.
         ```
+
         First Header  | Second Header
+
         ------------- | -------------
+
         Content Cell  | Content Cell
+
         Content Cell  | Content Cell
         ```
 * Table of Contents

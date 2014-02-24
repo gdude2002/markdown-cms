@@ -149,15 +149,15 @@ You can find the standard Markdown syntax documentation over at
         ```
         A paragrah, introducing:
 
-         ~~~~~~~~~~~~~
+        [~~~~~~~~~~~~~] Remove the [] in your documents, it turns out GitHub also supports these.
         Some code
-         ~~~~~~~~~~~~~
+        [~~~~~~~~~~~~~]
 
-         ~~~~~~~~~~~~~.python hl_lines="1 3"
+        [~~~~~~~~~~~~~].python hl_lines="1 3"
         # This line is emphasized
         # This line isn't
         # This line is emphasized
-         ~~~~~~~~~~~~~
+        [~~~~~~~~~~~~~]
         ```
     * This also supports GitHub's backtick syntax (\`\`\`).
 * Footnotes
@@ -197,7 +197,6 @@ You can find the standard Markdown syntax documentation over at
 * Tables
     * Yep, tables too.
         ```
-
         First Header  | Second Header
         ------------- | -------------
         Content Cell  | Content Cell

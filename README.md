@@ -197,6 +197,7 @@ You can find the standard Markdown syntax documentation over at
 * Tables
     * Yep, tables too.
         ```
+
         First Header  | Second Header
         ------------- | -------------
         Content Cell  | Content Cell

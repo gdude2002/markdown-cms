@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <title><%block name="title"/></title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="description" content="Network and business programming by Gareth Coles" />
+        <meta name="keywords" content="programming python hire ireland networking sockets websockets node javascript" />
+        <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,600" rel="stylesheet" type="text/css" />
+        <!--[if lte IE 8]><script src="/static/blog/js/html5shiv.js"></script><![endif]-->
+        <script src="/static/blog/js/jquery.min.js"></script>
+        <script src="/static/blog/js/jquery.dropotron.min.js"></script>
+        <script src="/static/blog/js/skel.min.js"></script>
+        <script src="/static/blog/js/skel-panels.min.js"></script>
+        <script src="/static/blog/js/init.js"></script>
+        <noscript>
+            <link rel="stylesheet" href="/static/blog/css/skel-noscript.css" />
+            <link rel="stylesheet" href="/static/blog/css/style.css" />
+            <link rel="stylesheet" href="/static/blog/css/style-n1.css" />
+        </noscript>
+
+        <%block name="header"/>
+    </head>
+
+    <body class="right-sidebar">
+        ${self.body()}
+
+        <div id="footer-wrapper">
+            <div id="footer" class="container">
+                <header class="major">
+                    <h2>Under construction</h2>
+                    <span>This site is still being built!</span>
+                    <p>
+                        This site was created using <a href="http://bottlepy.org/">Bottle</a>, and is powered by
+                        <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a>.
+                        No PHP code was used in the development of this site.
+                    </p>
+                </header>
+            </div>
+
+            ## Copyright
+
+            <div id="copyright" class="container">
+                <ul class="menu">
+                    <li>&copy; Gareth Coles. All rights reserved.</li>
+                    <li>Design by <a href="http://html5up.net/">HTML5 UP</a></li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>

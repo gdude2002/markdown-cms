@@ -1,0 +1,6 @@
+bottle==0.12.4
+cherrypy==3.2.4
+mako
+markdown
+requests
+pyyaml

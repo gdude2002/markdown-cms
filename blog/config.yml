@@ -1,0 +1,6 @@
+entries:
+  - welcome
+frontpage:
+  mode: latest  # Can be "entry" or "latest"
+  entry: welcome
+password: Password goes here.

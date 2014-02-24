@@ -1,0 +1,107 @@
+<%inherit file="base.html"/>
+<%block name="title">gserv.me | ${content.Meta["title"][0]}</%block>
+
+## Header and navigation
+
+<div id="header-wrapper">
+    <!-- Header -->
+        <div id="header" class="container">
+            <h1 id="logo"><a href="/blog">gserv.me</a></h1>
+
+            <nav id="nav">
+                <ul>
+                    <li>
+                        <a href="">Projects</a>
+                        <ul>
+                            <li>
+                                <span>Personal <strong style="float: right;">&#8669;</strong></span>
+                                <ul>
+                                    <li><a href="http://ultros.io">Ultros</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <span>Current work <strong style="float: right;">&#8669;</strong></span>
+                                <ul>
+                                    <li><a href="http://www.lattice.ie/">Lattice Research</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <span>Past work <strong style="float: right;">&#8669;</strong></span>
+                                <ul>
+                                    <li><a href="http://www.aviso.io">Aviso Novate</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="/blog">Home</a></li>
+                    <li class="break"><a href="https://github.com/gdude2002">GitHub</a></li>
+                    <li><a href="http://ie.linkedin.com/pub/gareth-coles/82/13b/81a/">LinkedIn</a></li>
+                </ul>
+                <hr/>
+                <ul>
+                    % for key in pages.keys():
+                        <li><a href="${pages[key]}">${key}</a></li>
+                    % endfor
+##                    <li><a href="#">Page</a></li>
+##                    <li><a href="#">Page</a></li>
+##                    <li><a href="#">Page</a></li>
+##                    <li><a href="#">Page</a></li>
+                </ul>
+            </nav>
+        </div>
+</div>
+
+## Content
+
+<div class="wrapper">
+    <div class="container">
+        <div class="row" id="main">
+
+            ## Left area, content
+
+            <div class="8u">
+
+                    <article id="content">
+                        <header>
+                            <h2>${content.Meta["title"][0]}</h2>
+                            <span>${content.Meta["description"][0]}</span>
+                        </header>
+##                        <a href="http://ineedchemicalx.deviantart.com/art/Mind-is-a-clear-stage-375431607" class="image full"><img src="images/pic01.jpg" alt="" /></a>
+                        <div id="markdown-content">
+${content.html}
+                        </div>
+                    </article>
+
+            </div>
+
+            ## Right area, sidebar
+
+            <div class="4u">
+                <section id="sidebar">
+                    <section>
+                        <header>
+                            <h3>Latest posts</h3>
+                        </header>
+                        <ul class="action">
+                            % for entry in entries:
+                                <li><a href="${entry['url']}">${entry['title']}</a></li>
+                            % endfor
+                        </ul>
+                    </section>
+##                    <section>
+##                        <a href="http://ineedchemicalx.deviantart.com/art/Boundless-291831118" class="image full"><img src="images/pic07.jpg" alt="" /></a>
+##                        <header>
+##                            <h3>Commodo lorem varius</h3>
+##                        </header>
+##                        <p>Lorem ipsum dolor sit amet consectetur et sed adipiscing elit. Curabitur et vel
+##                        sem sit amet dolor neque semper magna. Lorem ipsum dolor sit amet consectetur et dolore
+##                        adipiscing elit. Curabitur vel sem sit.</p>
+##                        <ul class="actions">
+##                            <li><a href="#" class="button">Ipsum sed dolor</a></li>
+##                        </ul>
+##                    </section>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

@@ -62,11 +62,20 @@ class Routes(object):
         log("Blog routes set up.")
 
     def do_sync(self):
-        self.config.sync()
-        self.latest_entries.sync()
-        self.parsed_entries.sync()
-        self.all_pages.sync()
-        self.parsed_pages.sync()
+        self.config.close()
+        self.latest_entries.close()
+        self.parsed_entries.close()
+        self.all_pages.close()
+        self.parsed_pages.close()
+
+        self.config = shelve.open("cache/config", "c", writeback=True)
+        self.latest_entries = shelve.open("cache/entries-latest", "c",
+                                          writeback=True)
+        self.parsed_entries = shelve.open("cache/entries-parsed", "c",
+                                          writeback=True)
+        self.all_pages = shelve.open("cache/pages-all", "c", writeback=True)
+        self.parsed_pages = shelve.open("cache/pages-parsed", "c",
+                                        writeback=True)
 
     def blog(self):
         self.do_sync()

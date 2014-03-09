@@ -5,7 +5,7 @@ import os
 import yaml
 
 from bottle import run, default_app, request, hook
-from internal.util import log_request, log
+from internal.util import log_request, log, log_error
 
 
 class Manager(object):
@@ -31,8 +31,8 @@ class Manager(object):
                     mod = __import__("routes.%s" % module, fromlist=["Routes"])
                     self.routes[module] = mod.Routes(self.app, self)
                 except Exception as e:
-                    log("Error loading routes module '%s': %s" % (module, e),
-                        logging.INFO)
+                    log_error("Error loading routes module '%s': %s"
+                              % (module, e))
 
         log("Finished loading routes modules.", logging.INFO)
 

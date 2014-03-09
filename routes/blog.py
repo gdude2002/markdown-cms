@@ -162,10 +162,13 @@ class Routes(object):
             config_entries.reverse()
             self.config["reversed_entries"] = config_entries
 
-            self.latest_entries["latest"]= []
+            self.latest_entries["latest"] = []
             base_url = "/blog/entry/%s"
 
             log("Parsing all entries..", logging.INFO)
+            for key in self.parsed_entries.keys()[:]:
+                del self.parsed_entries[key]
+
             for entry in self.config["entries"]:
                 try:
                     markdown = parse_markdown("blog/entries/%s.md" % entry)
@@ -190,6 +193,12 @@ class Routes(object):
                     break  # No more entries
 
             log("Parsing all pages..", logging.INFO)
+
+            for key in self.all_pages.keys()[:]:
+                del self.all_pages[key]
+
+            for key in self.parsed_pages.keys()[:]:
+                del self.parsed_pages[key]
 
             for filename in os.listdir("blog/pages"):
                 if filename.endswith(".md"):

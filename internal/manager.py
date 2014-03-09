@@ -42,9 +42,9 @@ class Manager(object):
     def start(self):
         try:
             config = yaml.load(open("development.yml", "r"))
-            host = config["host"]
-            port = config["port"]
-            server = config["server"]
+            host = config.get("host", "127.0.0.1")
+            port = config.get("port", 8080)
+            server = config.get("server", "cherrypy")
         except Exception as e:
             log("Unable to load development config: %s" % e, logging.INFO)
             log("Continuing using the defaults.", logging.INFO)

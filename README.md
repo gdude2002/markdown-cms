@@ -5,13 +5,10 @@ A CMS powered by Python with Bottle and using Markdown files for content.
 It's designed to be fast, easy to use and easy to configure. It's also fully
 compatible with your WSGI server!
 
-Okay, not quite; workers don't share data, but we're getting there.
-
 Markdown CMS compiles the Markdown files into memory at runtime. This is to
 save on processing time later - they aren't compiled every time an entry
-is accessed, but this does have the disadvantage that they need to be
-recompiled on every change manually. You *can* do this as it stands, but
-we're looking at better ways of doing this.
+is accessed. Additionally, files are reloaded when they've been modified,
+so you shouldn't have to worry about reloading them manually.
 
 As nobody who's involved in this project is a designer, I've decided to go
 with a standard theme from HTML5 UP, which has been modified slightly
@@ -40,7 +37,8 @@ It's not very big, but it is very important, so don't forget about it.
 Let's work from the bottom-up..
 
 * `password` - This is a configurable password for reloading the configuration
-    and recompiling all the Markdown files.
+    and recompiling all the Markdown files - You shouldn't need to do this
+    manually, however.
 * `frontpage` - Settings that relate to which entry is shown on the front page.
     * `mode` - This can be either `latest` or `entry`; use the latter if you just
         want to show a specific entry all the time.
@@ -58,10 +56,17 @@ You've got two options for running this (Or at least, two that the CMS was
 designed for).
 
 * For development only, run `run.py` directly using Python.
+    * You can also create a development.yml file in the main directory if you want
+        to change the running defaults.
+        * `host` (Defaults to **127.0.0.1**) - The hostname to listen on
+        * `port` (Defaults to **8080**) - The port to listen on
+        * `server` (Defaults to **cherrypy**) - The
+            [Bottle adapter](http://bottlepy.org/docs/dev/deployment.html#switching-the-server-backend)
+            to use
+    * You should **NEVER** use this in production, all webapps should be run by uWSGI or Gunicorn
+        or some other master process that can deal with subthreading and subprocessing the webapp.
 * For production, use uWSGI and Nginx.
-    * At present, reloading doesn't work very well with uWSGI. We're working
-        on this, but for now, we recommend restarting your server when you make
-        an edit.
+    * Files are watched for changes and reloaded automatically.
 
 Usage
 =====
@@ -218,3 +223,6 @@ Reloading the server
 
 To reload the server, simply go to the following URL: `http://domain:port/blog/reload/password`,
 replacing "password" with the password you supplied in the configuration above.
+
+**Note:** You no longer actually have to do this. The CMS will watch all the files for changes and reload
+them automatically.

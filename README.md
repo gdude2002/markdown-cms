@@ -67,6 +67,9 @@ designed for).
         or some other master process that can deal with subthreading and subprocessing the webapp.
 * For production, use uWSGI and Nginx.
     * Files are watched for changes and reloaded automatically.
+        * Please note that you need to
+            [enable threads](http://uwsgi-docs.readthedocs.org/en/latest/Options.html#enable-threads)
+            for this to work.
 
 Usage
 =====

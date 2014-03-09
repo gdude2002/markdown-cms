@@ -14,10 +14,6 @@ def log(message, level=logging.DEBUG):
     logging.log(level, message)
 
 
-def log_error(message):
-    logging.exception(message)
-
-
 def log_request(request, message, level=logging.DEBUG):
     ip = request.remote_addr
     log("[%s] %s" % (ip, message), level)

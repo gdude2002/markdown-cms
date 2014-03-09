@@ -4,4 +4,3 @@ mako
 markdown
 requests
 pyyaml
-lockfile

@@ -1,15 +1,11 @@
 __author__ = 'Gareth Coles'
 
-import shelve
 import logging
 import os
-import pickle
-
-from lockfile import LockFile
 
 from bottle import request, response, redirect, abort
 from bottle import mako_template as template
-from internal.util import log, parse_markdown, log_error
+from internal.util import log, parse_markdown
 
 import yaml
 
@@ -17,32 +13,16 @@ import yaml
 class Routes(object):
 
     app = None
-    config = shelve.Shelf  # Dict-like
-    latest_entries = shelve.Shelf
-    parsed_entries = shelve.Shelf
+    config = {}  # Dict-like
+    latest_entries = []
+    parsed_entries = {}
 
-    all_pages = shelve.Shelf
-    parsed_pages = shelve.Shelf
-
-    lock = LockFile("lockfile.lock")
+    all_pages = {}
+    parsed_pages = {}
 
     def __init__(self, app, manager):
         self.app = app
         self.manager = manager
-
-        try:
-            os.makedirs("cache")
-        except:
-            pass
-
-        self.config = shelve.open("cache/config", "c", writeback=True)
-        self.latest_entries = shelve.open("cache/entries-latest", "c",
-                                          writeback=True)
-        self.parsed_entries = shelve.open("cache/entries-parsed", "c",
-                                          writeback=True)
-        self.all_pages = shelve.open("cache/pages-all", "c", writeback=True)
-        self.parsed_pages = shelve.open("cache/pages-parsed", "c",
-                                        writeback=True)
 
         self._reload()
 
@@ -111,93 +91,57 @@ class Routes(object):
         redirect("/blog", 303)
 
     def get_entries(self):
-        return self.latest_entries["latest"]
+        return self.latest_entries
 
     def get_pages(self):
         return self.all_pages
 
-    def hacky_strip(self, obj):
-        funcs = dir(obj)[:]
-
-        for func in funcs:
-            if not func.startswith("__") \
-               and not func.endswith("__"):
-                try:
-                    if not isinstance(getattr(obj, func),
-                                      str):
-                        if not func in ["Meta", "html"]:
-                            delattr(obj, func)
-
-                except AttributeError:
-                    pass
-
-        return obj
-
     def _reload(self):
-        with self.lock:
-            config = yaml.load(open("blog/config.yml", "r"))
-            self.config["entries"] = config["entries"]
-            self.config["frontpage"] = config["frontpage"]
-            self.config["password"] = config["password"]
-            config_entries = self.config["entries"][:]
-            config_entries.reverse()
-            self.config["reversed_entries"] = config_entries
+        self.config = yaml.load(open("blog/config.yml", "r"))
+        config_entries = self.config["entries"][:]
+        config_entries.reverse()
+        self.config["reversed_entries"] = config_entries
 
-            self.latest_entries["latest"]= []
-            base_url = "/blog/entry/%s"
+        self.latest_entries = []
+        base_url = "/blog/entry/%s"
 
-            log("Parsing all entries..", logging.INFO)
-            for entry in self.config["entries"]:
+        log("Parsing all entries..", logging.INFO)
+        for entry in self.config["entries"]:
+            try:
+                markdown = parse_markdown("blog/entries/%s.md" % entry)
+            except Exception as e:
+                log("Unable to parse '%s': %s" % (entry, e), logging.WARN)
+            else:
+                self.parsed_entries[entry] = markdown
+                log("Parsed entry: %s" % entry, logging.INFO)
+        log("All entries parsed.", logging.INFO)
+
+        for i in range(0, 9):
+            try:
+                entry = self.config["reversed_entries"][i]
+                markdown = self.parsed_entries[entry]
+                title = markdown.Meta["title"][0]
+                self.latest_entries.append({"title": title,
+                                            "url": base_url % entry})
+            except IndexError:
+                break  # No more entries
+
+        log("Parsing all pages..", logging.INFO)
+
+        for filename in os.listdir("blog/pages"):
+            if filename.endswith(".md"):
+                name = filename.split(".")[0]
+                friendly = name.replace("_", " ").title()
                 try:
-                    markdown = parse_markdown("blog/entries/%s.md" % entry)
+                    markdown = parse_markdown("blog/pages/%s" % filename)
                 except Exception as e:
-                    log_error("Unable to parse '%s': %s" % (entry, e))
+                    log("Unable to parse '%s': %s" % (name, e), logging.WARN)
                 else:
-                    log("Entry: %s" % entry, logging.INFO)
+                    self.all_pages[friendly] = "/blog/page/%s" % name
+                    self.parsed_pages[name] = markdown
+                    log("Parsed page: %s" % name, logging.INFO)
 
-                    markdown = self.hacky_strip(markdown)
-
-                    log("Pickled: %s" % pickle.dumps(markdown), logging.INFO)
-                    # raise Exception("Stop!")
-                    self.parsed_entries[entry] = markdown
-                    log("Parsed entry: %s" % entry, logging.INFO)
-            log("All entries parsed.", logging.INFO)
-
-            for i in range(0, 9):
-                try:
-                    entry = self.config["reversed_entries"][i]
-                    markdown = self.parsed_entries[entry]
-                    title = markdown.Meta["title"][0]
-                    self.latest_entries["latest"].append({"title": title,
-                                                          "url": base_url % entry})
-                except IndexError:
-                    break  # No more entries
-
-            log("Parsing all pages..", logging.INFO)
-
-            for filename in os.listdir("blog/pages"):
-                if filename.endswith(".md"):
-                    name = filename.split(".")[0]
-                    friendly = name.replace("_", " ").title()
-                    try:
-                        markdown = parse_markdown("blog/pages/%s" % filename)
-                    except Exception as e:
-                        log("Unable to parse '%s': %s" % (name, e), logging.WARN)
-                    else:
-                        self.all_pages[friendly] = "/blog/page/%s" % name
-
-                        markdown = self.hacky_strip(markdown)
-
-                        self.parsed_pages[name] = markdown
-                        log("Parsed page: %s" % name, logging.INFO)
-
-            self.config.sync()
-            self.latest_entries.sync()
-            self.parsed_entries.sync()
-            self.all_pages.sync()
-            self.parsed_pages.sync()
-
-            log("All pages parsed.", logging.INFO)
+        log("All pages parsed.", logging.INFO)
 
     def reload(self, password):
         if password == self.config["password"]:

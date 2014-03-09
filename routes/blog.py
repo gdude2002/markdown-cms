@@ -52,6 +52,11 @@ class Routes(object):
 
     def watcher_callback(self, event):
 
+        if not event.src_path:
+            # Why would that happen?
+            log("No source path: %s" % event, logging.WARN)
+            return
+
         if event.is_directory or event.src_path.endswith("~"):
             # The latter is for Vim support
             return

@@ -61,15 +61,7 @@ class Routes(object):
 
         log("Blog routes set up.")
 
-    def do_sync(self):
-        self.config.sync()
-        self.latest_entries.sync()
-        self.parsed_entries.sync()
-        self.all_pages.sync()
-        self.parsed_pages.sync()
-
     def blog(self):
-        self.do_sync()
         if self.config["frontpage"]["mode"] == "entry":
             filename = self.config["frontpage"]["entry"]
         else:
@@ -79,7 +71,6 @@ class Routes(object):
                         entries=self.get_entries(), pages=self.get_pages())
 
     def blog_page(self, page):
-        self.do_sync()
         if not page:
             redirect("/blog", 303)
         else:
@@ -97,7 +88,6 @@ class Routes(object):
                             entries=self.get_entries(), pages=self.get_pages())
 
     def blog_entry(self, entry):
-        self.do_sync()
         if not entry:
             redirect("/blog", 303)
         else:
@@ -163,8 +153,12 @@ class Routes(object):
                 except Exception as e:
                     log_error("Unable to parse '%s': %s" % (entry, e))
                 else:
+                    log("Entry: %s" % entry, logging.INFO)
+
                     markdown = self.hacky_strip(markdown)
 
+                    log("Pickled: %s" % pickle.dumps(markdown), logging.INFO)
+                    # raise Exception("Stop!")
                     self.parsed_entries[entry] = markdown
                     log("Parsed entry: %s" % entry, logging.INFO)
             log("All entries parsed.", logging.INFO)
@@ -175,8 +169,7 @@ class Routes(object):
                     markdown = self.parsed_entries[entry]
                     title = markdown.Meta["title"][0]
                     self.latest_entries["latest"].append({"title": title,
-                                                          "url": base_url %
-                                                          entry})
+                                                          "url": base_url % entry})
                 except IndexError:
                     break  # No more entries
 
@@ -198,7 +191,11 @@ class Routes(object):
                         self.parsed_pages[name] = markdown
                         log("Parsed page: %s" % name, logging.INFO)
 
-            self.do_sync()
+            self.config.sync()
+            self.latest_entries.sync()
+            self.parsed_entries.sync()
+            self.all_pages.sync()
+            self.parsed_pages.sync()
 
             log("All pages parsed.", logging.INFO)
 

@@ -228,22 +228,9 @@ class Routes(object):
     def _reload(self):
         self.reload_config()
 
-        log("Parsing all pages..", logging.INFO)
-
         for filename in os.listdir("blog/pages"):
             if filename.endswith(".md"):
-                name = filename.rsplit(".", 1)[0]
-                friendly = name.replace("_", " ").title()
-                try:
-                    markdown = parse_markdown("blog/pages/%s" % filename)
-                except Exception as e:
-                    log("Unable to parse '%s': %s" % (name, e), logging.WARN)
-                else:
-                    self.all_pages[friendly] = "/blog/page/%s" % name
-                    self.parsed_pages[name] = markdown
-                    log("Parsed page: %s" % name, logging.INFO)
-
-        log("All pages parsed.", logging.INFO)
+                self.reload_page(filename)
 
     def reload(self, password):
         if password == self.config["password"]:

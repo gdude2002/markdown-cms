@@ -29,7 +29,7 @@ class Routes(object):
     def static_blog_js(self, path):
         return static_file(path, root="static/blog/js")
 
-    def static_keybase_txt(self, path):
+    def static_keybase_txt(self):
         return static_file("keybase.txt", root="static")
 
     def static_403(self):

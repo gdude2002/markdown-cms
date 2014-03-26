@@ -15,6 +15,8 @@ class Routes(object):
         app.route("/js/<path:path>", ["GET", "POST"], self.static_blog_js)
         app.route("/static/", ["GET", "POST"], self.static_403)
         app.route("/static", ["GET", "POST"], self.static_403)
+        app.route("/.well-known/keybase.txt", ["GET", "POST"],
+                  self.static_keybase_txt)
 
         log("Static routes set up.")
 
@@ -26,6 +28,9 @@ class Routes(object):
 
     def static_blog_js(self, path):
         return static_file(path, root="static/blog/js")
+
+    def static_keybase_txt(self, path):
+        return static_file("keybase.txt", root="static")
 
     def static_403(self):
         abort(403, "You may not list the static files.")
